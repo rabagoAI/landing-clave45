@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clave 45 — Las conspiraciones existen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #1c1a14;
+      --paper:     #f0e8d0;
+      --paper-dim: #d4c9a8;
+      --paper-dark:#b8a880;
+      --ink:       #1a1610;
+      --ink-faded: #4a4030;
+      --red:       #cc1100;
+      --red-dim:   #8a0a00;
+      --stamp-red: #b01010;
+      --yellow:    #d4a017;
+      --border:    #8a7850;
+      --card-bg:   #ede4c8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Courier Prime', 'Courier New', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── TEXTURA PAPEL FONDO ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 28px,
+          rgba(100,80,40,0.06) 28px,
+          rgba(100,80,40,0.06) 29px
+        );
+    }
+
+    /* ── HERO ── */
+    header {
+      position: relative;
+      z-index: 1;
+      background: var(--paper);
+      border-bottom: 3px double var(--border);
+      padding: 3rem 1.5rem 2.5rem;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Manchas de café esquinas */
+    header::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,60,10,0.12) 0%, transparent 70%);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; left: 40px;
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(100,60,10,0.1) 0%, transparent 70%);
+    }
+
+    .stamp-classified {
+      display: inline-block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.4em;
+      color: var(--stamp-red);
+      border: 3px solid var(--stamp-red);
+      padding: 0.3rem 1.2rem;
+      transform: rotate(-3deg);
+      opacity: 0.85;
+      margin-bottom: 1.5rem;
+      box-shadow: 2px 2px 0 rgba(176,16,16,0.2);
+      animation: fadeIn 0.6s ease both;
+    }
+
+    .cover-img-wrap {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 1.5rem;
+      position: relative;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    .cover-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border: 1px solid var(--border);
+      background: transparent;
+    }
+
+    .cover-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border: 1px dashed var(--paper-dark);
+      background: transparent;
+    }
+
+    .cover-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: sepia(0.2) contrast(1.05);
+    }
+
+    .cover-fallback {
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 8rem);
+      line-height: 0.85;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      animation: fadeUp 0.7s ease 0.15s both;
+    }
+
+    h1 span {
+      display: block;
+      font-size: 0.32em;
+      letter-spacing: 0.5em;
+      color: var(--red);
+      font-family: 'Bebas Neue', sans-serif;
+      margin-bottom: 0.4rem;
+    }
+
+    .lema {
+      font-family: 'Special Elite', serif;
+      font-size: 0.9rem;
+      color: var(--ink-faded);
+      font-style: italic;
+      margin-top: 1rem;
+      letter-spacing: 0.05em;
+      animation: fadeUp 0.7s ease 0.25s both;
+    }
+
+    .lema strong { color: var(--red); font-style: normal; }
+
+    .author-line {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.72rem;
+      color: var(--ink-faded);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+      animation: fadeUp 0.7s ease 0.3s both;
+    }
+
+    /* ── HILO ROJO DECORATIVO ── */
+    .redthread {
+      position: relative;
+      z-index: 1;
+      height: 24px;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .redthread::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--red) 10%,
+        var(--red) 90%,
+        transparent 100%
+      );
+      transform: translateY(-50%);
+    }
+
+    /* ── PLATAFORMAS ── */
+    .platforms-section {
+      position: relative;
+      z-index: 1;
+      background: var(--paper);
+      border-bottom: 2px solid var(--border);
+      padding: 2rem 1.5rem;
+    }
+
+    .section-label {
+      font-family: 'Special Elite', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--ink-faded);
+      text-align: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .platforms-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .platform-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--ink-faded);
+      text-decoration: none;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      box-shadow: 2px 2px 0 var(--paper-dark);
+    }
+
+    .platform-link:hover {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--border);
+    }
+
+    .platform-link svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ── DIVISOR TABLÓN ── */
+    .board-label {
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+      padding: 1.5rem 1.5rem 0.5rem;
+      text-align: center;
+    }
+
+    .board-label span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.5em;
+      color: var(--paper-dark);
+      border: 1px solid var(--border);
+      padding: 0.3rem 1.5rem;
+      opacity: 0.6;
+    }
+
+    /* ── EPISODIOS — estilo fichas de expediente ── */
+    .episodes-section {
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+      padding: 1rem 1.5rem 5rem;
+    }
+
+    #episodes-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .episode-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.3), 6px 6px 0 rgba(0,0,0,0.1);
+      padding: 0;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: fadeUp 0.5s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Pin de chincheta */
+    .episode-card::before {
+      content: '●';
+      position: absolute;
+      top: 8px; right: 12px;
+      font-size: 1rem;
+      color: var(--red);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      z-index: 2;
+    }
+
+    .episode-card:hover {
+      transform: translate(-2px, -3px) rotate(0.3deg);
+      box-shadow: 5px 6px 0 rgba(0,0,0,0.35), 9px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .ep-thumb-wrap {
+      width: 100%;
+      height: 140px;
+      overflow: hidden;
+      border-bottom: 2px solid var(--border);
+      position: relative;
+    }
+
+    .ep-thumb {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: sepia(0.4) contrast(1.05);
+      transition: filter 0.3s, transform 0.3s;
+    }
+
+    .episode-card:hover .ep-thumb {
+      filter: sepia(0.1) contrast(1.1);
+      transform: scale(1.03);
+    }
+
+    .ep-thumb-fallback {
+      width: 100%; height: 100%;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--border);
+      letter-spacing: 0.2em;
+    }
+
+    .ep-body { padding: 1rem; }
+
+    .ep-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .ep-date {
+      font-size: 0.62rem;
+      color: var(--ink-faded);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .ep-dur {
+      font-size: 0.62rem;
+      color: var(--red-dim);
+    }
+
+    .ep-title {
+      font-family: 'Special Elite', serif;
+      font-size: 0.88rem;
+      color: var(--ink);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .ep-desc {
+      font-size: 0.72rem;
+      color: var(--ink-faded);
+      line-height: 1.65;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .ep-actions { margin-top: 0.9rem; }
+
+    .btn-listen {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.38rem 0.85rem;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 0.2s;
+      border: 1px solid var(--ink);
+    }
+
+    .btn-listen:hover { background: var(--red); border-color: var(--red); }
+
+    /* ── LOADING / ERROR ── */
+    #loading, #error-msg {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem;
+      font-family: 'Special Elite', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--paper-dark);
+    }
+
+    .spinner {
+      width: 28px; height: 28px;
+      border: 2px solid var(--border);
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .load-more-wrap {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    #load-more {
+      padding: 0.6rem 2rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--paper-dark);
+      font-family: 'Special Elite', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    }
+
+    #load-more:hover {
+      background: var(--paper);
+      color: var(--ink);
+      border-color: var(--paper-dark);
+    }
+
+    #load-more:disabled { opacity: 0.3; cursor: default; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: var(--paper);
+      border-top: 3px double var(--border);
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--ink-faded);
+    }
+
+    footer a { color: var(--red-dim); text-decoration: none; }
+    footer a:hover { color: var(--red); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 0.85; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 560px) {
+      h1 { font-size: 3.5rem; }
+      #episodes-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header>
+  <div class="stamp-classified">⬛ CLASIFICADO ⬛</div>
+
+  <div class="cover-img-wrap">
+    <img class="cover-img" id="cover-img"
+      src="https://res.cloudinary.com/ds7shn66t/image/upload/v1773309204/logoE45_urjweu.png"
+      alt="Clave 45"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+    <div class="cover-fallback" style="display:none;">C45</div>
+  </div>
+
+  <h1>
+    <span>Podcast</span>
+    Clave 45
+  </h1>
+  <p class="lema">"Las conspiraciones... <strong>existen</strong>"</p>
+  <p class="author-line">Por Gerald Dean · Desde 2016 · T10</p>
+</header>
+
+<div class="redthread"></div>
+
+<!-- PLATAFORMAS -->
+<section class="platforms-section">
+  <p class="section-label">// Archivos disponibles en</p>
+  <div class="platforms-grid">
+
+    <a class="platform-link" href="https://www.ivoox.com/podcast-clave-45_sq_f1267427_1.html" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-5h2V9h-2v6zm1-8a1.25 1.25 0 110 2.5A1.25 1.25 0 0112 7z"/></svg>
+      iVoox
+    </a>
+
+    <a class="platform-link" href="https://open.spotify.com/show/15ncOe2ekXWYVGXegmSvsQ" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.563.387-.857.207-2.35-1.435-5.305-1.76-8.786-.963-.335.077-.67-.133-.746-.469-.077-.336.132-.67.469-.746 3.809-.87 7.076-.496 9.713 1.115.293.18.386.563.207.856zm1.223-2.723c-.226.367-.706.482-1.072.257-2.687-1.652-6.785-2.131-9.965-1.166-.413.127-.848-.106-.973-.517-.125-.413.108-.848.518-.973 3.632-1.102 8.147-.568 11.234 1.328.366.226.482.707.258 1.071zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71c-.493.15-1.016-.129-1.166-.623-.149-.495.13-1.016.623-1.166 3.532-1.073 9.404-.866 13.115 1.337.445.264.59.838.327 1.282-.265.444-.838.59-1.282.326z"/></svg>
+      Spotify
+    </a>
+
+    <a class="platform-link" href="https://podcasts.apple.com/es/podcast/clave-45/id1141613616" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-.5 4.5a3.5 3.5 0 013.5 3.5c0 1.02-.44 1.94-1.14 2.59.45.31.8.74 1.01 1.25.16.38.25.8.26 1.24A4.49 4.49 0 0112 17.5a4.49 4.49 0 01-3.13-1.42c.01-.44.1-.86.26-1.24.21-.51.56-.94 1.01-1.25A3.49 3.49 0 018.5 10a3.5 3.5 0 013-3.46V6.5zm0 1a2.5 2.5 0 100 5 2.5 2.5 0 000-5zm.5 6a3.5 3.5 0 00-3.46 3h6.92A3.5 3.5 0 0012 13.5z"/></svg>
+      Apple Podcasts
+    </a>
+
+    <a class="platform-link" href="https://music.amazon.es/podcasts/b3260d2c-897f-439b-b143-5b86c7215769/clave-45" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 14.5c-2 1.2-4.5 1.5-7 .8-.3-.1-.2-.5.1-.5 2.2.5 4.4.3 6.2-.7.3-.2.6.1.7.4zm.9-1.9c-.2.3-.6.4-.9.2-2.3-1.4-5.8-1.8-8.5-1-.3.1-.7-.1-.8-.4-.1-.3.1-.7.4-.8 3.1-.9 6.9-.5 9.6 1.1.2.2.3.6.2.9zm.1-2c-2.7-1.6-7.2-1.75-9.8-1-.4.1-.8-.1-.9-.5-.1-.4.1-.8.5-.9 3-.9 8-.7 11.1 1.1.3.2.4.7.2 1-.2.3-.7.5-1.1.3z"/></svg>
+      Amazon Music
+    </a>
+
+    <a class="platform-link" href="https://www.podbean.com/podcast-detail/d4mrk-71593/Clave-45-Podcast" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+      PodBean
+    </a>
+
+    <a class="platform-link" href="https://podtail.com/es/podcast/clave-45/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      Podtail
+    </a>
+
+    <a class="platform-link" href="https://metacast.app/podcast/clave-45/C8ZEzKoY" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      Metacast
+    </a>
+
+    <a class="platform-link" href="https://www.facebook.com/clave45/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      Facebook
+    </a>
+
+    <a class="platform-link" href="https://www.instagram.com/podclave45" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </a>
+
+  </div>
+</section>
+
+<!-- TABLÓN -->
+<div class="board-label"><span>▶ ÚLTIMAS TRANSMISIONES INTERCEPTADAS</span></div>
+
+<!-- EPISODIOS -->
+<section class="episodes-section">
+  <div id="episodes-list">
+    <div id="loading">
+      <div class="spinner"></div>
+      DESCIFRADO EN CURSO...
+    </div>
+    <div id="error-msg" style="display:none">
+      SEÑAL INTERRUMPIDA ·
+      <a href="https://www.ivoox.com/podcast-clave-45_sq_f1267427_1.html" target="_blank" style="color:var(--red)">Acceder vía iVoox</a>
+    </div>
+  </div>
+
+  <div class="load-more-wrap">
+    <button id="load-more" style="display:none">[ DESCLASIFICAR MÁS ]</button>
+  </div>
+</section>
+
+<footer>
+  <p>CLAVE 45 · Por Gerald Dean · <a href="/cdn-cgi/l/email-protection#d5a5bab1b6b9b4a3b0e1e095b2b8b4bcb9fbb6bab8"><span class="__cf_email__" data-cfemail="0878676c6b64697e6d3c3d486f65696164266b6765">[email&#160;protected]</span></a> · <a href="https://www.ivoox.com/podcast-clave-45_sq_f1267427_1.html" target="_blank">iVoox</a></p>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+(function() {
+  const RSS_URL    = 'https://feeds.ivoox.com/feed_fg_f1267427_filtro_1.xml';
+  const OWN_PROXY  = url => `/api/proxy?url=${encodeURIComponent(url)}`;
+  const RSS2JSON   = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=100`;
+  const ALLORIGINS = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+  const isLocal    = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
+  const IMG_PROXY  = url => isLocal
+    ? `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+    : `/api/proxy?url=${encodeURIComponent(url)}`;
+  const PAGE_SIZE = 9;
+
+  let allEpisodes = [];
+  let shown = 0;
+
+  function formatDate(str) {
+    if (!str) return '';
+    return new Date(str).toLocaleDateString('es-ES', { year:'numeric', month:'short', day:'numeric' });
+  }
+
+  function stripHTML(html) {
+    const d = document.createElement('div');
+    d.innerHTML = html;
+    return (d.textContent || d.innerText || '').trim();
+  }
+
+  function parseRSS(xmlStr) {
+    const xml = new DOMParser().parseFromString(xmlStr, 'text/xml');
+    const ns  = 'http://www.itunes.com/dtds/podcast-1.0.dtd';
+    return Array.from(xml.querySelectorAll('item')).map(item => {
+      const linkEl = item.querySelector('link');
+      let link = linkEl?.textContent?.trim() || '';
+      if (!link && linkEl?.nextSibling?.nodeValue) link = linkEl.nextSibling.nodeValue.trim();
+      if (!link) link = item.querySelector('enclosure')?.getAttribute('url') || '#';
+      const image    = item.getElementsByTagNameNS(ns, 'image')[0]?.getAttribute('href') || '';
+      const duration = item.getElementsByTagNameNS(ns, 'duration')[0]?.textContent || '';
+      return {
+        title:       item.querySelector('title')?.textContent || '',
+        link,
+        pubDate:     item.querySelector('pubDate')?.textContent || '',
+        description: item.querySelector('description')?.textContent || '',
+        image, duration,
+      };
+    });
+  }
+
+  function renderEpisodes() {
+    const list  = document.getElementById('episodes-list');
+    const batch = allEpisodes.slice(shown, shown + PAGE_SIZE);
+
+    batch.forEach((ep, i) => {
+      const card = document.createElement('div');
+      card.className = 'episode-card';
+      card.style.animationDelay = (i * 0.06) + 's';
+
+      const date     = formatDate(ep.pubDate);
+      const desc     = stripHTML(ep.description).slice(0, 160);
+      const dur      = ep.duration ? `· ${ep.duration}` : '';
+      const thumbSrc = ep.image ? IMG_PROXY(ep.image) : '';
+
+      const img = thumbSrc
+        ? `<div class="ep-thumb-wrap">
+             <img class="ep-thumb" src="${thumbSrc}" alt="" loading="lazy"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+             <div class="ep-thumb-fallback" style="display:none;">C45</div>
+           </div>`
+        : `<div class="ep-thumb-wrap"><div class="ep-thumb-fallback" style="display:flex;">C45</div></div>`;
+
+      card.innerHTML = `
+        ${img}
+        <div class="ep-body">
+          <div class="ep-meta">
+            <span class="ep-date">${date}</span>
+            <span class="ep-dur">${dur}</span>
+          </div>
+          <div class="ep-title">${ep.title}</div>
+          ${desc ? `<div class="ep-desc">${desc}…</div>` : ''}
+          <div class="ep-actions">
+            <a class="btn-listen" href="${ep.link}" target="_blank" rel="noopener">▶ Escuchar</a>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    shown += batch.length;
+    const btn = document.getElementById('load-more');
+    btn.style.display = shown >= allEpisodes.length ? 'none' : 'inline-block';
+    btn.disabled = false;
+  }
+
+  async function loadFeed() {
+    let episodes = null;
+
+    // 1. rss2json — funciona con iVoox sin proxy propio
+    try {
+      const res  = await fetch(RSS2JSON(RSS_URL));
+      const data = await res.json();
+      if (data.status === 'ok' && data.items?.length) {
+        allEpisodes = data.items.map(item => ({
+          title:       item.title || '',
+          link:        item.link  || item.guid || '#',
+          pubDate:     item.pubDate || '',
+          description: item.description || item.content || '',
+          image:       item.thumbnail || item.enclosure?.link || '',
+          duration:    item.itunes_duration || '',
+        }));
+        document.getElementById('loading').style.display = 'none';
+        renderEpisodes();
+        return;
+      }
+    } catch(e) {}
+
+    // 2. Proxy propio Vercel (RSS directo)
+    try {
+      const res = await fetch(OWN_PROXY(RSS_URL));
+      if (res.ok) {
+        const text = await res.text();
+        if (text.trim().startsWith('<')) {
+          allEpisodes = parseRSS(text);
+          if (allEpisodes.length) {
+            document.getElementById('loading').style.display = 'none';
+            renderEpisodes();
+            return;
+          }
+        }
+      }
+    } catch(e) {}
+
+    // 3. AllOrigins (RSS directo)
+    try {
+      const res  = await fetch(ALLORIGINS(RSS_URL));
+      const data = await res.json();
+      if (data.contents?.trim().startsWith('<')) {
+        allEpisodes = parseRSS(data.contents);
+        if (allEpisodes.length) {
+          document.getElementById('loading').style.display = 'none';
+          renderEpisodes();
+          return;
+        }
+      }
+    } catch(e) {}
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error-msg').style.display = 'block';
+  }
+  document.getElementById('load-more').addEventListener('click', function() {
+    this.disabled = true;
+    renderEpisodes();
+  });
+
+  loadFeed();
+})();
+</script>
+
+</body>
+</html>
