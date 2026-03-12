@@ -605,14 +605,9 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 (function() {
-  const RSS_URL    = 'https://feeds.ivoox.com/feed_fg_f1267427_filtro_1.xml';
-  const OWN_PROXY  = url => `/api/proxy?url=${encodeURIComponent(url)}`;
-  const RSS2JSON   = url => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=100`;
-  const ALLORIGINS = url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-  const isLocal    = window.location.hostname === 'localhost' || window.location.protocol === 'file:';
-  const IMG_PROXY  = url => isLocal
-    ? `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
-    : `/api/proxy?url=${encodeURIComponent(url)}`;
+  const RSS_URL   = 'https://feeds.ivoox.com/feed_fg_f1267427_filtro_1.xml';
+  const PROXY     = url => `/api/proxy?url=${encodeURIComponent(url)}`;
+  const IMG_PROXY = url => `/api/proxy?url=${encodeURIComponent(url)}`;
   const PAGE_SIZE = 9;
 
   let allEpisodes = [];
@@ -695,59 +690,19 @@
   }
 
   async function loadFeed() {
-    let episodes = null;
-
-    // 1. rss2json — funciona con iVoox sin proxy propio
     try {
-      const res  = await fetch(RSS2JSON(RSS_URL));
-      const data = await res.json();
-      if (data.status === 'ok' && data.items?.length) {
-        allEpisodes = data.items.map(item => ({
-          title:       item.title || '',
-          link:        item.link  || item.guid || '#',
-          pubDate:     item.pubDate || '',
-          description: item.description || item.content || '',
-          image:       item.thumbnail || item.enclosure?.link || '',
-          duration:    item.itunes_duration || '',
-        }));
-        document.getElementById('loading').style.display = 'none';
-        renderEpisodes();
-        return;
-      }
-    } catch(e) {}
-
-    // 2. Proxy propio Vercel (RSS directo)
-    try {
-      const res = await fetch(OWN_PROXY(RSS_URL));
-      if (res.ok) {
-        const text = await res.text();
-        if (text.trim().startsWith('<')) {
-          allEpisodes = parseRSS(text);
-          if (allEpisodes.length) {
-            document.getElementById('loading').style.display = 'none';
-            renderEpisodes();
-            return;
-          }
-        }
-      }
-    } catch(e) {}
-
-    // 3. AllOrigins (RSS directo)
-    try {
-      const res  = await fetch(ALLORIGINS(RSS_URL));
-      const data = await res.json();
-      if (data.contents?.trim().startsWith('<')) {
-        allEpisodes = parseRSS(data.contents);
-        if (allEpisodes.length) {
-          document.getElementById('loading').style.display = 'none';
-          renderEpisodes();
-          return;
-        }
-      }
-    } catch(e) {}
-
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('error-msg').style.display = 'block';
+      const res = await fetch(PROXY(RSS_URL));
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const text = await res.text();
+      if (!text.trim().startsWith('<')) throw new Error('Respuesta no es XML');
+      allEpisodes = parseRSS(text);
+      if (!allEpisodes.length) throw new Error('Sin episodios');
+      document.getElementById('loading').style.display = 'none';
+      renderEpisodes();
+    } catch(e) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-msg').style.display = 'block';
+    }
   }
   document.getElementById('load-more').addEventListener('click', function() {
     this.disabled = true;
