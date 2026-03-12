@@ -605,9 +605,14 @@
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 (function() {
-  const RSS_URL   = 'https://feeds.ivoox.com/feed_fg_f1267427_filtro_1.xml';
-  const PROXY     = url => `/api/proxy?url=${encodeURIComponent(url)}`;
-  const IMG_PROXY = url => `/api/proxy?url=${encodeURIComponent(url)}`;
+  const RSS_URL  = 'https://feeds.ivoox.com/feed_fg_f1267427_filtro_1.xml';
+  const isLocal  = window.location.protocol === 'file:' || window.location.hostname === 'localhost';
+  const PROXY    = url => isLocal
+    ? `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`
+    : `/api/proxy?url=${encodeURIComponent(url)}`;
+  const IMG_PROXY = url => isLocal
+    ? `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+    : `/api/proxy?url=${encodeURIComponent(url)}`;
   const PAGE_SIZE = 9;
 
   let allEpisodes = [];
@@ -693,9 +698,18 @@
     try {
       const res = await fetch(PROXY(RSS_URL));
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const text = await res.text();
-      if (!text.trim().startsWith('<')) throw new Error('Respuesta no es XML');
-      allEpisodes = parseRSS(text);
+
+      let xmlStr;
+      if (isLocal) {
+        // AllOrigins devuelve JSON con .contents
+        const data = await res.json();
+        xmlStr = data.contents;
+      } else {
+        xmlStr = await res.text();
+      }
+
+      if (!xmlStr?.trim().startsWith('<')) throw new Error('Respuesta no es XML');
+      allEpisodes = parseRSS(xmlStr);
       if (!allEpisodes.length) throw new Error('Sin episodios');
       document.getElementById('loading').style.display = 'none';
       renderEpisodes();
